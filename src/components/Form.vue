@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 
@@ -11,6 +11,7 @@ const formData = ref({
   isAustralian: false,
   reason: '',
   gender: '',
+  suburb: 'Clayton', // 用来演示 v-bind 单向绑定
 })
 
 // 3.2 存放每个字段的错误信息，初始都是 null（没有错误）
@@ -95,6 +96,12 @@ const validateReason = (blur) => {
     errors.value.reason = null
   }
 }
+
+// 5.3.2 若 Reason 里包含 'friend'，实时显示一条绿色欢迎信息
+// computed 是响应式的：formData.reason 一变，hasFriend 自动重新计算
+const hasFriend = computed(() =>
+  formData.value.reason.toLowerCase().includes('friend'),
+)
 
 // 3.5 & 3.9 提交时先跑所有验证，全部通过才添加 card
 const submitForm = () => {
@@ -224,6 +231,10 @@ const clearForm = () => {
             <div v-if="errors.reason" class="text-danger">
               {{ errors.reason }}
             </div>
+            <!-- 5.3.2 reason 里含 'friend' 时显示绿色提示 -->
+            <div v-if="hasFriend" class="text-success">
+              Great to have a friend
+            </div>
           </div>
 
           <div class="mb-3">
@@ -243,6 +254,17 @@ const clearForm = () => {
             <div v-if="errors.gender" class="text-danger">
               {{ errors.gender }}
             </div>
+          </div>
+
+          <!-- Activity 5.4：用 v-bind（单向绑定）演示，对比 v-model 的双向绑定 -->
+          <div class="mb-3">
+            <label for="suburb" class="form-label">Suburb</label>
+            <input
+              type="text"
+              class="form-control"
+              id="suburb"
+              v-bind:value="formData.suburb"
+            />
           </div>
 
           <button type="submit" class="btn btn-primary me-2">Submit</button>
