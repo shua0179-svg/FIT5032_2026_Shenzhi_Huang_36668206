@@ -5,11 +5,11 @@ import { login } from '../stores/auth'
 
 const router = useRouter()
 
-// 硬编码的凭据（本练习用；真实项目会查后端数据库）
+// Hardcoded credentials (for this exercise; a real app would query a backend)
 const HARDCODED_USERNAME = 'admin'
 const HARDCODED_PASSWORD = 'password123'
 
-// v-model 双向绑定的输入
+// Inputs bound with v-model (two-way binding)
 const username = ref('')
 const password = ref('')
 
@@ -18,10 +18,10 @@ const handleLogin = () => {
     username.value === HARDCODED_USERNAME &&
     password.value === HARDCODED_PASSWORD
   ) {
-    login() // 更新全局登录状态
-    router.push('/about') // 登录成功 → 进入受保护的 About 页
+    login() // Update the global authentication state
+    router.push('/about') // On success, go to the protected About page
   } else {
-    router.push('/access-denied') // 凭据错误 → 访问被拒页
+    router.push('/access-denied') // Wrong credentials, go to Access Denied
   }
 }
 </script>

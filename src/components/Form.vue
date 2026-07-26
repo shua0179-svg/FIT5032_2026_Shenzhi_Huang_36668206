@@ -11,10 +11,10 @@ const formData = ref({
   isAustralian: false,
   reason: '',
   gender: '',
-  suburb: 'Clayton', // 用来演示 v-bind 单向绑定
+  suburb: 'Clayton', // Used to demonstrate one-way binding with v-bind
 })
 
-// 3.2 存放每个字段的错误信息，初始都是 null（没有错误）
+// Holds the error message for each field; null means no error
 const errors = ref({
   username: null,
   email: null,
@@ -27,7 +27,7 @@ const errors = ref({
 
 const submittedCards = ref([])
 
-// 3.3 验证用户名：至少 3 个字符
+// Validate username: at least 3 characters
 const validateName = (blur) => {
   if (formData.value.username.length < 3) {
     if (blur) errors.value.username = 'Name must be at least 3 characters'
@@ -36,7 +36,7 @@ const validateName = (blur) => {
   }
 }
 
-// 3.7 验证密码：至少 8 位，且含大写、小写、数字、特殊字符
+// Validate password: at least 8 chars with uppercase, lowercase, number and special char
 const validatePassword = (blur) => {
   const password = formData.value.password
   const minLength = 8
@@ -60,7 +60,7 @@ const validatePassword = (blur) => {
   }
 }
 
-// 额外验证 1：Email 格式（用正则检查是否是合法邮箱）
+// Extra validation 1: email format (checked with a regular expression)
 const validateEmail = (blur) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!emailRegex.test(formData.value.email)) {
@@ -70,7 +70,7 @@ const validateEmail = (blur) => {
   }
 }
 
-// 额外验证 2：确认密码（两次输入必须一致）
+// Extra validation 2: confirm password (must match the password)
 const validateConfirmPassword = (blur) => {
   if (formData.value.confirmPassword !== formData.value.password) {
     if (blur) errors.value.confirmPassword = 'Passwords do not match.'
@@ -79,7 +79,7 @@ const validateConfirmPassword = (blur) => {
   }
 }
 
-// 3.11 自己练习：验证 Gender（必须选一个）
+// Validate gender: one option must be selected
 const validateGender = (blur) => {
   if (!formData.value.gender) {
     if (blur) errors.value.gender = 'Please select a gender.'
@@ -88,7 +88,7 @@ const validateGender = (blur) => {
   }
 }
 
-// 3.11 自己练习：验证 Reason（至少 10 个字符）
+// Validate reason: at least 10 characters
 const validateReason = (blur) => {
   if (formData.value.reason.length < 10) {
     if (blur) errors.value.reason = 'Reason must be at least 10 characters.'
@@ -97,13 +97,13 @@ const validateReason = (blur) => {
   }
 }
 
-// 5.3.2 若 Reason 里包含 'friend'，实时显示一条绿色欢迎信息
-// computed 是响应式的：formData.reason 一变，hasFriend 自动重新计算
+// Show a green welcome message in real time when the reason contains 'friend'.
+// computed is reactive: hasFriend recalculates automatically when reason changes.
 const hasFriend = computed(() =>
   formData.value.reason.toLowerCase().includes('friend'),
 )
 
-// 3.5 & 3.9 提交时先跑所有验证，全部通过才添加 card
+// On submit, run all validations first; only add a card if everything passes
 const submitForm = () => {
   validateName(true)
   validateEmail(true)
@@ -125,7 +125,7 @@ const submitForm = () => {
   }
 }
 
-// Clear 按钮：清空输入内容，但保留已经提交的 Card
+// Clear button: reset the input fields but keep the already submitted records
 const clearForm = () => {
   formData.value = {
     username: '',
@@ -231,7 +231,7 @@ const clearForm = () => {
             <div v-if="errors.reason" class="text-danger">
               {{ errors.reason }}
             </div>
-            <!-- 5.3.2 reason 里含 'friend' 时显示绿色提示 -->
+            <!-- Green message shown when the reason contains 'friend' -->
             <div v-if="hasFriend" class="text-success">
               Great to have a friend
             </div>
@@ -256,7 +256,7 @@ const clearForm = () => {
             </div>
           </div>
 
-          <!-- Activity 5.4：用 v-bind（单向绑定）演示，对比 v-model 的双向绑定 -->
+          <!-- One-way binding demo with v-bind, contrasted with v-model two-way binding -->
           <div class="mb-3">
             <label for="suburb" class="form-label">Suburb</label>
             <input
@@ -273,7 +273,7 @@ const clearForm = () => {
           </button>
         </form>
 
-        <!-- 4.3 用 PrimeVue DataTable 显示已提交的用户信息 -->
+        <!-- Display submitted user information with a PrimeVue DataTable -->
         <div class="mt-5" v-if="submittedCards.length">
           <h2 class="text-center mb-3">Submitted Users</h2>
           <DataTable :value="submittedCards" paginator :rows="5" tableStyle="min-width: 50rem">

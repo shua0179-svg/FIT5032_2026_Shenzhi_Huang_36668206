@@ -6,22 +6,26 @@ const router = useRouter()
 
 const handleLogout = () => {
   logout()
-  router.push('/login') // 登出后回到登录页
+  router.push('/login') // Go back to the login page after logging out
 }
 </script>
 
 <template>
-  <!-- 导航栏 -->
+  <!-- Navigation bar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-4">
     <span class="navbar-brand mb-0 h1">FIT5032 Library</span>
     <div class="navbar-nav me-auto flex-row gap-3">
       <router-link class="nav-link" to="/">Home</router-link>
-      <!-- 条件路由：About 链接只有登录后才显示 -->
+      <!-- Conditional routing: the About link only shows once logged in -->
       <router-link v-if="isAuthenticated" class="nav-link" to="/about">
         About
       </router-link>
+      <!-- Firebase Authentication links -->
+      <router-link class="nav-link" to="/FireRegister">Fire Register</router-link>
+      <router-link class="nav-link" to="/FirebaseSignin">Firebase Sign In</router-link>
+      <router-link class="nav-link" to="/FirebaseLogout">Firebase Logout</router-link>
     </div>
-    <!-- 条件渲染：未登录显示 Login，已登录显示 Logout -->
+    <!-- Conditional rendering: show Login when logged out, Logout when logged in -->
     <router-link v-if="!isAuthenticated" to="/login" class="btn btn-light">
       Login
     </router-link>
@@ -30,6 +34,6 @@ const handleLogout = () => {
     </button>
   </nav>
 
-  <!-- 路由出口：当前路由匹配的页面会渲染在这里 -->
+  <!-- Router outlet: the component matching the current route renders here -->
   <router-view />
 </template>

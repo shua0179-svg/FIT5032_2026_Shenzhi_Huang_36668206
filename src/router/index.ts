@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import FirebaseSigninView from '../views/FirebaseSigninView.vue'
+import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
+import FirebaseLogoutView from '../views/FirebaseLogoutView.vue'
 import { isAuthenticated } from '../stores/auth'
 
 const router = createRouter({
@@ -21,17 +24,33 @@ const router = createRouter({
       component: () => import('../views/AccessDeniedView.vue'),
     },
     {
+      path: '/FireRegister',
+      name: 'FireRegister',
+      component: FirebaseRegisterView,
+    },
+    {
+      path: '/FirebaseSignin',
+      name: 'FirebaseSignin',
+      component: FirebaseSigninView,
+    },
+    {
+      path: '/FirebaseLogout',
+      name: 'FirebaseLogout',
+      component: FirebaseLogoutView,
+    },
+    {
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue'),
-      // 访问此路由需要先登录
+      // This route requires the user to be authenticated
       meta: { requiresAuth: true },
     },
   ],
 })
 
-// 全局前置守卫 —— 安全路由的核心
-// 未登录用户访问受保护路由时，重定向到登录页
+// Global navigation guard - the core of secure routing.
+// If an unauthenticated user tries to open a protected route,
+// redirect them to the login page.
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !isAuthenticated.value) {
     next({ name: 'login' })

@@ -10,6 +10,9 @@ import router from './router'
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 
+// Firebase
+import { initializeApp } from 'firebase/app'
+
 const app = createApp(App)
 
 app.use(router)
@@ -22,3 +25,16 @@ app.use(PrimeVue, {
 })
 
 app.mount('#app')
+
+// ---- Firebase config ----
+const firebaseConfig = {
+  apiKey: 'AIzaSyD_Qhu1tmwFqOCYfjm4eei6ya4uGF0C_ec',
+  authDomain: 'fit5032-f3735.firebaseapp.com',
+  projectId: 'fit5032-f3735',
+  storageBucket: 'fit5032-f3735.firebasestorage.app',
+  messagingSenderId: '915200458647',
+  appId: '1:915200458647:web:280bd716c248a5a73d0ed2',
+  measurementId: 'G-TBCTBMTLE7',
+}
+
+initializeApp(firebaseConfig)

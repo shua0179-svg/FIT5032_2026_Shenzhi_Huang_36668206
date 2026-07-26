@@ -5,7 +5,7 @@ import { isAuthenticated } from '../stores/auth'
 <template>
   <div class="container mt-5 text-center">
     <h1 class="text-danger">Access Denied</h1>
-    <!-- v-if / v-else：根据登录状态显示不同内容 -->
+    <!-- v-if / v-else: show different content based on the login state -->
     <div v-if="!isAuthenticated">
       <p class="lead">
         You must be logged in to view that page, or the credentials you entered

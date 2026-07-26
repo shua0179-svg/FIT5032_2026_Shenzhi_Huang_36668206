@@ -1,8 +1,8 @@
 import { ref } from 'vue'
 
-// 共享的登录状态：所有组件和路由守卫都读同一个 ref，
-// 所以登录/登出后，导航栏等界面会自动更新。
-// 初始值从 localStorage 读取，刷新页面后仍保留登录状态。
+// Shared authentication state: all components and the router guard read this
+// same ref, so the navigation bar updates automatically after login/logout.
+// The initial value is read from localStorage so the login state survives a refresh.
 export const isAuthenticated = ref(localStorage.getItem('isAuthenticated') === 'true')
 
 export function login() {
