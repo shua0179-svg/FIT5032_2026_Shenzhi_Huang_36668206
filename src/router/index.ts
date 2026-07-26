@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import FirebaseSigninView from '../views/FirebaseSigninView.vue'
 import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
 import FirebaseLogoutView from '../views/FirebaseLogoutView.vue'
+import AddBookView from '../views/AddBookView.vue'
 import { isAuthenticated } from '../stores/auth'
 
 const router = createRouter({
@@ -37,6 +38,11 @@ const router = createRouter({
       path: '/FirebaseLogout',
       name: 'FirebaseLogout',
       component: FirebaseLogoutView,
+    },
+    {
+      path: '/addbook',
+      name: 'addbook',
+      component: AddBookView,
     },
     {
       path: '/about',
