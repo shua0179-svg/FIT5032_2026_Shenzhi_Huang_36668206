@@ -5,7 +5,7 @@ import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
 import FirebaseLogoutView from '../views/FirebaseLogoutView.vue'
 import AddBookView from '../views/AddBookView.vue'
 import { isAuthenticated } from '../stores/auth'
-
+import GetBookCountView from '../views/GetBookCountView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -18,6 +18,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginView.vue'),
+    },
+    {
+      path: '/book-counter',
+      name: 'book-counter',
+      component: GetBookCountView,
     },
     {
       path: '/access-denied',
