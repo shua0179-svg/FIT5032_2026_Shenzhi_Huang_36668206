@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import FirebaseSigninView from '../views/FirebaseSigninView.vue'
 import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
@@ -10,7 +10,12 @@ import CountBookAPI from '../views/CountBookAPI.vue'
 import GetAllBookAPI from '../views/GetAllBookAPI.vue'
 import WeatherView from '../views/WeatherView.vue'
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  // Hash routing prevents a direct GitHub Pages visit from returning a 404,
+  // while Cloudflare keeps the normal history-based URLs.
+  history:
+    import.meta.env.BASE_URL === '/FIT5032_2026_Shenzhi_Huang_36668206/'
+      ? createWebHashHistory(import.meta.env.BASE_URL)
+      : createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
