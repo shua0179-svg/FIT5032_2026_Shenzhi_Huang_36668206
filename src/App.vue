@@ -26,6 +26,9 @@ const handleLogout = () => {
       <router-link class="nav-link" to="/FirebaseLogout">Firebase Logout</router-link>
       <router-link class="nav-link" to="/addbook">Add Book</router-link>
       <router-link class="nav-link" to="/book-counter">Book Counter</router-link>
+      <router-link class="nav-link" to="/CountBookAPI">Count Book API</router-link>
+      <router-link class="nav-link" to="/GetAllBookAPI">Get All Book API</router-link>
+      <router-link class="nav-link" to="/weather">Weather API</router-link>
     </div>
     <!-- Conditional rendering: show Login when logged out, Logout when logged in -->
     <router-link v-if="!isAuthenticated" to="/login" class="btn btn-light">
