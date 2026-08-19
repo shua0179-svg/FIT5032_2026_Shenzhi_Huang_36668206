@@ -4,9 +4,9 @@ import { isAuthenticated, logout } from './stores/auth'
 
 const router = useRouter()
 
-const handleLogout = () => {
-  logout()
-  router.push('/login') // Go back to the login page after logging out
+const handleLogout = async () => {
+  await logout()
+  router.push('/FirebaseSignin')
 }
 </script>
 
@@ -24,11 +24,19 @@ const handleLogout = () => {
       <router-link class="nav-link" to="/FireRegister">Fire Register</router-link>
       <router-link class="nav-link" to="/FirebaseSignin">Firebase Sign In</router-link>
       <router-link class="nav-link" to="/FirebaseLogout">Firebase Logout</router-link>
-      <router-link class="nav-link" to="/addbook">Add Book</router-link>
+      <router-link v-if="isAuthenticated" class="nav-link" to="/addbook">Add Book</router-link>
+      <router-link v-if="isAuthenticated" class="nav-link" to="/library">My Library</router-link>
+      <router-link v-if="isAuthenticated" class="nav-link" to="/reading-records">
+        Reading Records
+      </router-link>
+      <router-link class="nav-link" to="/book-counter">Book Counter</router-link>
+      <router-link class="nav-link" to="/CountBookAPI">Count Book API</router-link>
+      <router-link class="nav-link" to="/GetAllBookAPI">Get All Book API</router-link>
+      <router-link class="nav-link" to="/weather">Weather API</router-link>
     </div>
     <!-- Conditional rendering: show Login when logged out, Logout when logged in -->
-    <router-link v-if="!isAuthenticated" to="/login" class="btn btn-light">
-      Login
+    <router-link v-if="!isAuthenticated" to="/FirebaseSignin" class="btn btn-light">
+      Sign in
     </router-link>
     <button v-else class="btn btn-outline-light" @click="handleLogout">
       Logout

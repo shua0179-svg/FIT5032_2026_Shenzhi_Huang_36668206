@@ -1,6 +1,7 @@
 // Firebase initialisation (Lab 8).
 // Config moved here from main.ts so Firebase/Firestore can be imported as a module.
 import { initializeApp } from 'firebase/app'
+import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
@@ -16,8 +17,10 @@ const firebaseConfig = {
 // Initialise the Firebase app
 const firebaseApp = initializeApp(firebaseConfig)
 
+const auth = getAuth(firebaseApp)
+
 // Firestore database instance
 const db = getFirestore(firebaseApp)
 
 export default firebaseApp
-export { db }
+export { auth, db }

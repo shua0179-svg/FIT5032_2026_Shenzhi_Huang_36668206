@@ -23,7 +23,7 @@ const signin = () => {
       const role = getRole(data.user.email)
       currentRole.value = role
       console.log('Logged in as role:', role)
-      router.push('/') // On success, go to the home page
+      router.push(router.currentRoute.value.query.redirect || '/')
     })
     .catch((error) => {
       console.log(error.code)
