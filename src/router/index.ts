@@ -4,7 +4,7 @@ import FirebaseSigninView from '../views/FirebaseSigninView.vue'
 import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
 import FirebaseLogoutView from '../views/FirebaseLogoutView.vue'
 import AddBookView from '../views/AddBookView.vue'
-import { isAuthenticated } from '../stores/auth'
+import { firebaseAuthReady, firebaseUser, isAuthenticated } from '../stores/auth'
 import GetBookCountView from '../views/GetBookCountView.vue'
 import CountBookAPI from '../views/CountBookAPI.vue'
 import GetAllBookAPI from '../views/GetAllBookAPI.vue'
@@ -71,6 +71,19 @@ const router = createRouter({
       path: '/addbook',
       name: 'addbook',
       component: AddBookView,
+      meta: { requiresFirebaseUser: true },
+    },
+    {
+      path: '/library',
+      name: 'library',
+      component: () => import('../views/MyLibraryView.vue'),
+      meta: { requiresFirebaseUser: true },
+    },
+    {
+      path: '/reading-records',
+      name: 'reading-records',
+      component: () => import('../views/ReadingRecordsView.vue'),
+      meta: { requiresFirebaseUser: true },
     },
     {
       path: '/about',
@@ -85,7 +98,15 @@ const router = createRouter({
 // Global navigation guard - the core of secure routing.
 // If an unauthenticated user tries to open a protected route,
 // redirect them to the login page.
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  if (to.meta.requiresFirebaseUser) {
+    await firebaseAuthReady
+    if (!firebaseUser.value) {
+      next({ name: 'FirebaseSignin', query: { redirect: to.fullPath } })
+      return
+    }
+  }
+
   if (to.meta.requiresAuth && !isAuthenticated.value) {
     next({ name: 'login' })
   } else {
