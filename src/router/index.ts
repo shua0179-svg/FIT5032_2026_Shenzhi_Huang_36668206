@@ -91,6 +91,12 @@ const router = createRouter({
       component: () => import('../views/MapExplorerView.vue'),
     },
     {
+      path: '/share-library',
+      name: 'share-library',
+      component: () => import('../views/ShareLibraryView.vue'),
+      meta: { requiresFirebaseUser: true },
+    },
+    {
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue'),
