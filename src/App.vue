@@ -29,6 +29,7 @@ const handleLogout = async () => {
       <router-link v-if="isAuthenticated" class="nav-link" to="/reading-records">
         Reading Records
       </router-link>
+      <router-link class="nav-link" to="/map-explorer">Map Explorer</router-link>
       <router-link class="nav-link" to="/book-counter">Book Counter</router-link>
       <router-link class="nav-link" to="/CountBookAPI">Count Book API</router-link>
       <router-link class="nav-link" to="/GetAllBookAPI">Get All Book API</router-link>

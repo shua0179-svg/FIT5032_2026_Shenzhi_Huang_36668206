@@ -86,6 +86,11 @@ const router = createRouter({
       meta: { requiresFirebaseUser: true },
     },
     {
+      path: '/map-explorer',
+      name: 'map-explorer',
+      component: () => import('../views/MapExplorerView.vue'),
+    },
+    {
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue'),
