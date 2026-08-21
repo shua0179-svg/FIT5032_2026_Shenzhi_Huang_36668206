@@ -97,6 +97,12 @@ const router = createRouter({
       meta: { requiresFirebaseUser: true },
     },
     {
+      path: '/reading-insights',
+      name: 'reading-insights',
+      component: () => import('../views/ReadingInsightsView.vue'),
+      meta: { requiresFirebaseUser: true },
+    },
+    {
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue'),
