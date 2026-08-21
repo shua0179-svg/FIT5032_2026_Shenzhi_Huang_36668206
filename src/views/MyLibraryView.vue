@@ -3,11 +3,13 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 import { db } from '../firebase/init'
 import { firebaseUser } from '../stores/auth'
+import { downloadCsv, downloadJson } from '../utils/export'
 
 const PAGE_SIZE = 10
 const books = ref([])
 const loading = ref(true)
 const errorMsg = ref('')
+const exportStatus = ref('')
 const page = ref(1)
 const sortKey = ref('createdAt')
 const sortDirection = ref('desc')
@@ -15,6 +17,7 @@ const filters = reactive({ name: '', isbn: '', genre: '', status: '', rating: ''
 
 const dateValue = (value) => value?.toDate?.().getTime?.() || 0
 const displayDate = (value) => (value?.toDate ? value.toDate().toLocaleDateString() : 'New')
+const exportDate = () => new Date().toISOString().slice(0, 10)
 
 const filteredBooks = computed(() => {
   const search = (value) => String(value || '').toLowerCase()
@@ -50,6 +53,40 @@ const sortBy = (key) => {
   }
 }
 
+const exportRows = () => sortedBooks.value.map((book) => [
+  book.name,
+  book.isbn,
+  book.genre,
+  book.status,
+  book.rating,
+  displayDate(book.createdAt),
+])
+
+const exportCsv = () => {
+  downloadCsv(
+    `my-library-${exportDate()}.csv`,
+    ['Title', 'ISBN', 'Genre', 'Status', 'Rating', 'Added'],
+    exportRows(),
+  )
+  exportStatus.value = `Downloaded ${sortedBooks.value.length} filtered book record(s) as CSV.`
+}
+
+const exportJson = () => {
+  downloadJson(`my-library-${exportDate()}.json`, {
+    exportedAt: new Date().toISOString(),
+    recordCount: sortedBooks.value.length,
+    books: sortedBooks.value.map((book) => ({
+      title: book.name,
+      isbn: book.isbn,
+      genre: book.genre,
+      status: book.status,
+      rating: book.rating,
+      added: displayDate(book.createdAt),
+    })),
+  })
+  exportStatus.value = `Downloaded ${sortedBooks.value.length} filtered book record(s) as JSON.`
+}
+
 const fetchBooks = async () => {
   if (!firebaseUser.value) return
   loading.value = true
@@ -77,8 +114,16 @@ onMounted(fetchBooks)
         <h1 class="mb-1">My Library</h1>
         <p class="text-muted mb-0">Your private books: search every column, sort headers, and browse 10 records per page.</p>
       </div>
-      <button class="btn btn-outline-primary" @click="fetchBooks">Refresh</button>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="btn btn-outline-secondary" type="button" @click="exportCsv">Export CSV</button>
+        <button class="btn btn-outline-secondary" type="button" @click="exportJson">Export JSON</button>
+        <button class="btn btn-outline-primary" type="button" @click="fetchBooks">Refresh</button>
+      </div>
     </div>
+
+    <p class="visually-hidden" aria-live="polite">{{ exportStatus }}</p>
+    <p v-if="exportStatus" class="text-success mb-3" role="status">{{ exportStatus }}</p>
+    <p class="text-muted small">Exports include the records currently shown by your filters and sorting.</p>
 
     <p v-if="loading" class="text-muted">Loading your books...</p>
     <p v-else-if="errorMsg" class="alert alert-danger">{{ errorMsg }}</p>

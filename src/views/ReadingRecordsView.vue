@@ -3,11 +3,13 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 import { db } from '../firebase/init'
 import { firebaseUser } from '../stores/auth'
+import { downloadCsv, downloadJson } from '../utils/export'
 
 const PAGE_SIZE = 10
 const records = ref([])
 const loading = ref(true)
 const errorMsg = ref('')
+const exportStatus = ref('')
 const page = ref(1)
 const sortKey = ref('updatedAt')
 const sortDirection = ref('desc')
@@ -15,6 +17,7 @@ const filters = reactive({ bookName: '', genre: '', status: '', rating: '', acti
 
 const dateValue = (value) => value?.toDate?.().getTime?.() || 0
 const displayDate = (value) => (value?.toDate ? value.toDate().toLocaleDateString() : 'New')
+const exportDate = () => new Date().toISOString().slice(0, 10)
 const filteredRecords = computed(() => {
   const search = (value) => String(value || '').toLowerCase()
   return records.value.filter((record) =>
@@ -43,6 +46,40 @@ const sortBy = (key) => {
   if (sortKey.value === key) sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
   else { sortKey.value = key; sortDirection.value = 'asc' }
 }
+
+const exportRows = () => sortedRecords.value.map((record) => [
+  record.bookName,
+  record.genre,
+  record.status,
+  record.rating,
+  record.activity,
+  displayDate(record.updatedAt),
+])
+
+const exportCsv = () => {
+  downloadCsv(
+    `reading-records-${exportDate()}.csv`,
+    ['Book', 'Genre', 'Status', 'Rating', 'Activity', 'Updated'],
+    exportRows(),
+  )
+  exportStatus.value = `Downloaded ${sortedRecords.value.length} filtered reading record(s) as CSV.`
+}
+
+const exportJson = () => {
+  downloadJson(`reading-records-${exportDate()}.json`, {
+    exportedAt: new Date().toISOString(),
+    recordCount: sortedRecords.value.length,
+    readingRecords: sortedRecords.value.map((record) => ({
+      book: record.bookName,
+      genre: record.genre,
+      status: record.status,
+      rating: record.rating,
+      activity: record.activity,
+      updated: displayDate(record.updatedAt),
+    })),
+  })
+  exportStatus.value = `Downloaded ${sortedRecords.value.length} filtered reading record(s) as JSON.`
+}
 const fetchRecords = async () => {
   if (!firebaseUser.value) return
   loading.value = true
@@ -68,8 +105,15 @@ onMounted(fetchRecords)
         <h1 class="mb-1">Reading Records</h1>
         <p class="text-muted mb-0">A second personal interactive table with independent column search, sorting, and pagination.</p>
       </div>
-      <button class="btn btn-outline-primary" @click="fetchRecords">Refresh</button>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="btn btn-outline-secondary" type="button" @click="exportCsv">Export CSV</button>
+        <button class="btn btn-outline-secondary" type="button" @click="exportJson">Export JSON</button>
+        <button class="btn btn-outline-primary" type="button" @click="fetchRecords">Refresh</button>
+      </div>
     </div>
+    <p class="visually-hidden" aria-live="polite">{{ exportStatus }}</p>
+    <p v-if="exportStatus" class="text-success mb-3" role="status">{{ exportStatus }}</p>
+    <p class="text-muted small">Exports include the records currently shown by your filters and sorting.</p>
     <p v-if="loading" class="text-muted">Loading your reading records...</p>
     <p v-else-if="errorMsg" class="alert alert-danger">{{ errorMsg }}</p>
     <template v-else>
