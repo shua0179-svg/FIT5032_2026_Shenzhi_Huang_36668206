@@ -53,6 +53,16 @@ const sortBy = (key) => {
   }
 }
 
+const ariaSort = (key) => {
+  if (sortKey.value !== key) return 'none'
+  return sortDirection.value === 'asc' ? 'ascending' : 'descending'
+}
+
+const nextSortLabel = (key, label) => {
+  const nextDirection = sortKey.value === key && sortDirection.value === 'asc' ? 'descending' : 'ascending'
+  return `${label}. Sort ${nextDirection}.`
+}
+
 const exportRows = () => sortedBooks.value.map((book) => [
   book.name,
   book.isbn,
@@ -132,12 +142,12 @@ onMounted(fetchBooks)
         <table class="table table-hover align-middle">
           <thead>
             <tr>
-              <th><button class="btn btn-link p-0 text-decoration-none" @click="sortBy('name')">Title</button></th>
-              <th><button class="btn btn-link p-0 text-decoration-none" @click="sortBy('isbn')">ISBN</button></th>
-              <th><button class="btn btn-link p-0 text-decoration-none" @click="sortBy('genre')">Genre</button></th>
-              <th><button class="btn btn-link p-0 text-decoration-none" @click="sortBy('status')">Status</button></th>
-              <th><button class="btn btn-link p-0 text-decoration-none" @click="sortBy('rating')">Rating</button></th>
-              <th><button class="btn btn-link p-0 text-decoration-none" @click="sortBy('createdAt')">Added</button></th>
+              <th :aria-sort="ariaSort('name')"><button class="btn btn-link p-0 text-decoration-none" :aria-label="nextSortLabel('name', 'Title')" @click="sortBy('name')">Title</button></th>
+              <th :aria-sort="ariaSort('isbn')"><button class="btn btn-link p-0 text-decoration-none" :aria-label="nextSortLabel('isbn', 'ISBN')" @click="sortBy('isbn')">ISBN</button></th>
+              <th :aria-sort="ariaSort('genre')"><button class="btn btn-link p-0 text-decoration-none" :aria-label="nextSortLabel('genre', 'Genre')" @click="sortBy('genre')">Genre</button></th>
+              <th :aria-sort="ariaSort('status')"><button class="btn btn-link p-0 text-decoration-none" :aria-label="nextSortLabel('status', 'Status')" @click="sortBy('status')">Status</button></th>
+              <th :aria-sort="ariaSort('rating')"><button class="btn btn-link p-0 text-decoration-none" :aria-label="nextSortLabel('rating', 'Rating')" @click="sortBy('rating')">Rating</button></th>
+              <th :aria-sort="ariaSort('createdAt')"><button class="btn btn-link p-0 text-decoration-none" :aria-label="nextSortLabel('createdAt', 'Added date')" @click="sortBy('createdAt')">Added</button></th>
             </tr>
             <tr>
               <th><input v-model="filters.name" class="form-control form-control-sm" aria-label="Search title" placeholder="Search title" /></th>
